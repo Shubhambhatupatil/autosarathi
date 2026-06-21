@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="success-model.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <!-- SUCCESS MODAL -->
+<div class="success-overlay" id="successModal">
+<div class="success-box">
+<div class="success-icon">
+<i class="fa-solid fa-circle-check"></i>
+</div>
+<h2>Thank You For Booking A Service</h2>
+<p id="successEmailMsg"></p>
+<button onclick="closeSuccessModal()">OK</button>
+</div>
+</div>
+
+<style>
+
+.success-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+opacity:0;
+visibility:hidden;
+transition:0.3s;
+}
+
+.success-overlay.show{
+opacity:1;
+visibility:visible;
+}
+
+.success-box{
+width:90%;
+max-width:450px;
+background:white;
+padding:40px 30px;
+border-radius:30px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,0.2);
+animation:popup 0.4s ease;
+}
+
+@keyframes popup{
+from{
+transform:scale(0.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+.success-icon{
+width:90px;
+height:90px;
+background:#dcfce7;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:auto;
+margin-bottom:25px;
+}
+
+.success-icon i{
+font-size:45px;
+color:#10b981;
+}
+
+.success-box h2{
+font-size:30px;
+color:#064e3b;
+margin-bottom:20px;
+}
+
+.success-box p{
+font-size:17px;
+line-height:1.7;
+color:#374151;
+margin-bottom:30px;
+}
+
+.success-box button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#064e3b;
+color:white;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.success-box button:hover{
+background:#10b981;
+}
+
+</style>
+</body>
+</html>

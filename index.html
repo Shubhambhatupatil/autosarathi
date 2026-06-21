@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AutoSarthi - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #0d3b2e; --forest-mid: #1a5c45; --forest-light: #2d7a5c;
+      --mint: #5effc6; --mint-soft: #a8f5d8; --mint-dim: rgba(94,255,198,0.12);
+      --surface: #f5f9f7; --surface-2: #eaf3ef;
+      --border: rgba(13,59,46,0.12); --border-strong: rgba(13,59,46,0.22);
+      --text-primary: #0d1f18; --text-secondary: #3d6458; --text-muted: #7a9e93;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 18px;
+      --shadow-md: 0 8px 24px rgba(13,59,46,0.12);
+      --shadow-lg: 0 20px 48px rgba(13,59,46,0.18);
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --ease: 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); color: var(--text-primary); background: var(--surface); -webkit-font-smoothing: antialiased; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,59,46,0.97);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(94,255,198,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+    }
+    .logo {
+      font-family: var(--font-display); font-size: 22px; font-weight: 800;
+      color: #fff; letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+    .logo i { color: var(--mint); }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.7); text-decoration: none;
+      font-size: 14px; font-weight: 500; padding: 7px 14px;
+      border-radius: var(--radius-sm); transition: var(--ease);
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      text-decoration: none; font-size: 14px; font-weight: 500;
+      padding: 8px 18px; border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2);
+      transition: var(--ease);
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .nav-btn.register { background: var(--mint); color: var(--forest); border-color: var(--mint); font-weight: 600; }
+    .nav-btn.register:hover { background: #4ae8b0; }
+
+    /* profile dropdown */
+    .profile-container { position: relative; }
+    .profile-icon { font-size: 30px; color: var(--mint); cursor: pointer; transition: var(--ease); }
+    .profile-icon:hover { color: var(--mint-soft); }
+    .profile-menu {
+      display: none; position: absolute; right: 0; top: calc(100% + 10px);
+      background: #fff; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+      min-width: 180px; overflow: hidden;
+    }
+    .profile-menu.show { display: block; }
+    .profile-menu a {
+      display: block; padding: 11px 16px; font-size: 14px;
+      color: var(--text-primary); text-decoration: none;
+      border-bottom: 1px solid var(--border); transition: background var(--ease);
+    }
+    .profile-menu a:last-child { border-bottom: none; }
+    .profile-menu a:first-child { font-weight: 600; color: var(--forest); background: var(--surface); }
+    .profile-menu a:hover { background: var(--surface-2); }
+
+    /* mobile */
+    .menu-toggle { display: none; font-size: 22px; color: #fff; cursor: pointer; }
+    .sidebar {
+      display: none; position: fixed; top: 64px; right: 0; bottom: 0;
+      width: 260px; background: var(--forest); padding: 20px; z-index: 99;
+      transform: translateX(100%); transition: transform 0.3s ease;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.3);
+    }
+    .sidebar.active { transform: translateX(0); }
+    .sidebar a {
+      display: block; color: rgba(255,255,255,0.8); text-decoration: none;
+      font-size: 15px; font-weight: 500; padding: 12px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); transition: color var(--ease);
+    }
+    .sidebar a:hover { color: var(--mint); }
+    .sidebar hr { border-color: rgba(255,255,255,0.15); margin: 8px 0; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--forest);
+      padding: 88px 2rem 108px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 65% 75% at 50% 115%, rgba(94,255,198,0.2) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(94,255,198,0.12); color: var(--mint);
+      border: 1px solid rgba(94,255,198,0.28);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; position: relative;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5.5vw, 58px); font-weight: 800;
+      color: #fff; line-height: 1.08; letter-spacing: -1.5px;
+      margin-bottom: 20px; position: relative;
+    }
+    .hero h1 em { color: var(--mint); font-style: normal; }
+    .hero p {
+      font-size: 17px; color: rgba(255,255,255,0.62);
+      max-width: 480px; margin: 0 auto 40px; line-height: 1.65; position: relative;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+    .hero-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body); font-size: 15px; font-weight: 600;
+      padding: 13px 28px; border-radius: var(--radius-sm);
+      border: none; cursor: pointer; text-decoration: none; transition: var(--ease);
+    }
+    .hero-btn-primary { background: var(--mint); color: var(--forest); }
+    .hero-btn-primary:hover { background: #4ae8b0; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(94,255,198,0.35); }
+    .hero-btn-ghost { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.22); }
+    .hero-btn-ghost:hover { background: rgba(255,255,255,0.18); }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: #fff; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: center; flex-wrap: wrap;
+    }
+    .stat-item { display: flex; align-items: center; gap: 12px; padding: 22px 44px; border-right: 1px solid var(--border); }
+    .stat-item:last-child { border-right: none; }
+    .stat-icon { width: 38px; height: 80px; border-radius: 9px; background: var(--mint-dim); display: grid; place-items: center; flex-shrink: 0; }
+    .stat-icon i { color: var(--forest-mid); font-size: 15px; }
+    .stat-num { font-family: var(--font-display); font-size: 21px; font-weight: 700; color: var(--forest); line-height: 1; }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── FEATURES SECTION ── */
+    .section { padding: 76px 2rem; background: var(--surface); }
+    .section-header { text-align: center; margin-bottom: 52px; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--forest-light); margin-bottom: 10px; }
+    .section-title { font-family: var(--font-display); font-size: 34px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+    .section-sub { font-size: 16px; color: var(--text-secondary); margin-top: 10px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 20px; max-width: 1000px; margin: 0 auto;
+    }
+    .feature-card {
+      background: #fff; border-radius: var(--radius-lg);
+      border: 1px solid var(--border); padding: 32px;
+      cursor: pointer; transition: var(--ease);
+    }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--mint-soft); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--mint-dim); display: grid; place-items: center;
+      margin-bottom: 22px; transition: var(--ease);
+    }
+    .feature-icon i { font-size: 22px; color: var(--forest); transition: var(--ease); }
+    .feature-card:hover .feature-icon { background: var(--forest); }
+    .feature-card:hover .feature-icon i { color: var(--mint); }
+    .feature-card h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 22px; }
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 14px; font-weight: 600; color: var(--forest); text-decoration: none;
+    }
+    .feature-link i { transition: transform var(--ease); }
+    .feature-card:hover .feature-link i { transform: translateX(4px); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--forest); color: rgba(255,255,255,0.45); text-align: center; padding: 26px; font-size: 13px; }
+    footer span { color: var(--mint); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .navbar { padding: 0 1rem; }
+      .nav-links, .nav-right { display: none; }
+      .menu-toggle { display: block; }
+      .sidebar { display: block; }
+      .stat-item { padding: 18px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="home.html" class="logo"><i class="fa-solid fa-car-side"></i> AutoSarthi</a>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="car-wash.html">Car Wash</a>
+    <a href="auto-services.html">Auto Services</a>
+    <a href="#">Nearby</a>
+  </div>
+  <div class="nav-right" id="navRight"></div>
+  <div class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></div>
+</nav>
+<div class="sidebar" id="sidebar"></div>
+
+<section class="hero">
+  <div class="hero-eyebrow"><i class="fa-solid fa-star"></i> Trusted by 500+ garages</div>
+  <h1>Reliable Auto Services<br>at <em>Your Fingertips</em></h1>
+  <p>Find trusted mechanics, book services, and keep your vehicle running smoothly — all in one place.</p>
+  <div class="hero-actions">
+    <a href="car-wash.html" class="hero-btn hero-btn-primary"><i class="fa-solid fa-water"></i> Explore Services</a>
+    <a href="register.html" class="hero-btn hero-btn-ghost">Register Your Garage</a>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fa-solid fa-warehouse"></i></div>
+    <div><div class="stat-num">500+</div><div class="stat-label">Garages Listed</div></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fa-solid fa-wrench"></i></div>
+    <div><div class="stat-num">2,000+</div><div class="stat-label">Services Available</div></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-icon"><i class="fa-solid fa-location-dot"></i></div>
+    <div><div class="stat-num">30+</div><div class="stat-label">Cities Covered</div></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">What we offer</div>
+    <div class="section-title">Everything Your Vehicle Needs</div>
+    <div class="section-sub">From a quick wash to full mechanical repair — find it all nearby.</div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card" onclick="window.location.href='car-wash.html'">
+      <div class="feature-icon"><i class="fa-solid fa-water"></i></div>
+      <h3>Car Wash</h3>
+      <p>Book professional car wash services near you. Filter by location and find the best deals.</p>
+      <a href="car-wash.html" class="feature-link">Browse Car Wash <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="feature-card" onclick="window.location.href='auto-services.html'">
+      <div class="feature-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+      <h3>Auto Services</h3>
+      <p>Engine repair, oil change, brake check and more. Trusted garages, transparent pricing.</p>
+      <a href="auto-services.html" class="feature-link">Browse Services <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
+      <h3>Nearby Mechanic</h3>
+      <p>Find trusted mechanics in your area instantly. Real-time location-based search.</p>
+      <a href="#" class="feature-link">Coming Soon <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<footer>&copy; 2025 <span>AutoSarthi</span>. Built with care for vehicle owners everywhere.</footer>
+
+<script>
+const token = localStorage.getItem("token");
+const navRight = document.getElementById("navRight");
+const sidebar = document.getElementById("sidebar");
+
+if (token) {
+  fetch("http://localhost:8080/api/mechanics/profile", {
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(data => {
+    navRight.innerHTML = `
+      <div class="profile-container">
+        <i class="fa-solid fa-user-circle profile-icon" onclick="toggleProfileMenu()"></i>
+        <div class="profile-menu" id="profileMenu">
+          <a href="#">${data.ownerName}</a>
+          <a href="Profile.html">My Profile</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>`;
+    sidebar.innerHTML = `
+      <a href="home.html">Home</a>
+      <a href="car-wash.html">Car Wash</a>
+      <a href="auto-services.html">Auto Services</a>
+      <a href="#">Nearby Mechanic</a>
+      <hr>
+      <a href="Profile.html"><i class="fa-solid fa-user"></i> ${data.ownerName}</a>
+      <a href="#" onclick="logout()">Logout</a>`;
+  })
+  .catch(() => { localStorage.removeItem("token"); window.location.href = "login.html"; });
+} else {
+  navRight.innerHTML = `
+    <a href="login.html" class="nav-btn">Login</a>
+    <a href="register.html" class="nav-btn register">Register As Mechanic</a>`;
+  sidebar.innerHTML = `
+    <a href="home.html">Home</a>
+    <a href="car-wash.html">Car Wash</a>
+    <a href="auto-services.html">Auto Services</a>
+    <a href="#">Nearby</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register As Mechanic</a>`;
+}
+
+function logout() { localStorage.removeItem("token"); window.location.href = "home.html"; }
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
+function toggleProfileMenu() { document.getElementById("profileMenu").classList.toggle("show"); }
+</script>
+</body>
+</html>

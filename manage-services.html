@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Services - AutoSarthi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="autosarthi.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .manage-layout { max-width: 900px; margin: 40px auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1fr 1.6fr; gap: 24px; align-items: start; }
+
+    .section-card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+    .section-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .section-card-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+    .section-card-title i { color: var(--forest-light); }
+    .section-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .section-card-body { padding: 24px; }
+
+    .type-selector { display: flex; gap: 8px; margin-bottom: 16px; }
+    .type-btn {
+      flex: 1; padding: 9px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-strong); background: white;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .type-btn.active { border-color: var(--forest); background: var(--mint-dim); color: var(--forest); }
+
+    .service-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .service-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .service-item-icon {
+      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+      background: var(--mint-dim); display: grid; place-items: center;
+    }
+    .service-item-icon i { font-size: 14px; color: var(--forest-mid); }
+    .service-item-info { flex: 1; min-width: 0; }
+    .service-item-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .service-item-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .service-item-type { font-size: 11px; margin-top: 4px; }
+    .service-item-price { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--forest); flex-shrink: 0; }
+
+    .empty-list { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+    .empty-list i { font-size: 36px; color: var(--mint-soft); margin-bottom: 10px; display: block; }
+    .empty-list p { font-size: 14px; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 14px; font-weight: 500; margin-bottom: 24px;
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--forest); }
+
+    @media(max-width: 700px) { .manage-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body style="background:var(--surface);">
+
+<nav class="navbar">
+  <a href="home.html" class="logo"><i class="fa-solid fa-car-side"></i> AutoSarthi</a>
+  <div class="nav-right">
+    <div class="profile-container">
+      <i class="fa-solid fa-user-circle profile-icon" onclick="document.getElementById('profileMenuNav').classList.toggle('show')"></i>
+      <div class="profile-menu" id="profileMenuNav">
+        <a href="Profile.html">My Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:32px auto 0;padding:0 1.5rem;">
+  <a href="Profile.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Profile</a>
+</div>
+
+<div class="manage-layout">
+
+  <!-- ADD FORM -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-card-title"><i class="fa-solid fa-plus-circle"></i> Add New Service</div>
+      <div class="section-card-sub">Fill in the details to list a service</div>
+    </div>
+    <div class="section-card-body">
+
+      <div class="form-group">
+        <label>Service Type</label>
+        <div class="type-selector">
+          <button class="type-btn active" id="btnWash" onclick="selectType('CAR_WASH')">
+            <i class="fa-solid fa-water"></i> Car Wash
+          </button>
+          <button class="type-btn" id="btnAuto" onclick="selectType('AUTO_SERVICE')">
+            <i class="fa-solid fa-wrench"></i> Auto Service
+          </button>
+        </div>
+        <input type="hidden" id="serviceType" value="CAR_WASH">
+      </div>
+
+      <div class="form-group">
+        <label>Service Name</label>
+        <input type="text" id="serviceName" class="form-control" placeholder="e.g. Full Body Polish">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="description" class="form-control" rows="3" placeholder="Briefly describe what's included..." style="resize:vertical;"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input type="number" id="price" class="form-control" placeholder="e.g. 499">
+      </div>
+
+      <div id="message"></div>
+
+      <button class="btn btn-primary btn-full" onclick="addService()">
+        <i class="fa-solid fa-plus"></i> Add Service
+      </button>
+    </div>
+  </div>
+
+  <!-- SERVICE LIST -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-card-title"><i class="fa-solid fa-list-check"></i> My Services</div>
+      <div class="section-card-sub" id="serviceCountLabel">Loading...</div>
+    </div>
+    <div class="section-card-body" id="servicesContainer">
+      <div class="empty-list"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading services...</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "login.html";
+
+function selectType(type) {
+  document.getElementById("serviceType").value = type;
+  document.getElementById("btnWash").classList.toggle("active", type === "CAR_WASH");
+  document.getElementById("btnAuto").classList.toggle("active", type === "AUTO_SERVICE");
+}
+
+window.onload = loadServices;
+
+function loadServices() {
+  fetch("http://localhost:8080/api/services/my-services", {
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(r => r.json())
+  .then(data => {
+    const c = document.getElementById("servicesContainer");
+    document.getElementById("serviceCountLabel").textContent = `${data.length} service${data.length !== 1 ? 's' : ''} listed`;
+
+    if (!data.length) {
+      c.innerHTML = `<div class="empty-list"><i class="fa-solid fa-list-check"></i><p>No services yet. Add your first one.</p></div>`;
+      return;
+    }
+
+    c.innerHTML = data.map(s => {
+      const isWash = s.serviceType === "CAR_WASH";
+      return `
+        <div class="service-item">
+          <div class="service-item-icon">
+            <i class="fa-solid ${isWash ? 'fa-water' : 'fa-wrench'}"></i>
+          </div>
+          <div class="service-item-info">
+            <div class="service-item-name">${s.serviceName}</div>
+            <div class="service-item-desc">${s.description}</div>
+            <div class="service-item-type">
+              <span class="badge ${isWash ? 'badge-wash' : 'badge-auto'}">${isWash ? 'Car Wash' : 'Auto Service'}</span>
+            </div>
+          </div>
+          <div class="service-item-price">₹${s.price}</div>
+        </div>`;
+    }).join('');
+  });
+}
+
+function addService() {
+  const btn = document.querySelector('.btn-primary');
+  const msg = document.getElementById("message");
+  const name = document.getElementById("serviceName").value.trim();
+  const desc = document.getElementById("description").value.trim();
+  const price = document.getElementById("price").value;
+
+  if (!name || !desc || !price) {
+    msg.innerHTML = `<div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> Please fill all fields.</div>`;
+    return;
+  }
+
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
+  btn.disabled = true;
+
+  const serviceData = {
+    serviceName: name,
+    description: desc,
+    price: price,
+    serviceType: document.getElementById("serviceType").value
+  };
+
+  fetch("http://localhost:8080/api/services/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+    body: JSON.stringify(serviceData)
+  })
+  .then(r => r.json())
+  .then(() => {
+    msg.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Service added successfully!</div>`;
+    setTimeout(() => msg.innerHTML = '', 3000);
+    loadServices();
+    document.getElementById("serviceName").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("price").value = "";
+    btn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Service';
+    btn.disabled = false;
+  })
+  .catch(() => {
+    msg.innerHTML = `<div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> Failed to add service.</div>`;
+    btn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Service';
+    btn.disabled = false;
+  });
+}
+
+function logout() { localStorage.removeItem("token"); window.location.href = "home.html"; }
+</script>
+</body>
+</html>

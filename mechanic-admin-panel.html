@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AutoSarthi - Bookings Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --forest: #0d3b2e;
+  --forest-light: #2d7a5c;
+  --mint: #5effc6;
+  --surface: #f5f9f7;
+  --border: rgba(13,59,46,0.15);
+  --text: #0d1f18;
+  --muted: #6b8f86;
+}
+
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* HEADER */
+.header {
+  background: var(--forest);
+  color: white;
+  padding: 16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.header h1 {
+  font-size: 20px;
+}
+
+.logout {
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 12px;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+
+/* TABLE */
+table {
+  width:100%;
+  border-collapse: collapse;
+}
+
+thead{
+  width:100%;
+}
+
+th {
+  background: var(--forest);
+  color:white;
+  font-size:13px;
+  padding:12px;  
+  text-align:left;
+  width:25%;
+}
+
+td {
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+/* STATUS BADGE */
+.badge {
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.PENDING { background:#fff4cc; color:#b78100; }
+.VIEWED { background:#dff3ff; color:#0077b6; }
+.CONFIRMED { background:#d1fae5; color:#047857; }
+
+/* BUTTON */
+.btn {
+  background: var(--mint);
+  color: var(--forest);
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn:hover {
+  opacity:0.9;
+}
+
+/* EMPTY */
+.empty {
+  text-align:center;
+  padding:40px;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1 id="welcomeText">🚗 AutoSarthi Dashboard</h1>
+  <div class="logout" onclick="logout()">Logout</div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Time Slot</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="bookingTable">
+        <tr>
+          <td colspan="7" class="empty">Loading bookings...</td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+<script>
+const API = "http://localhost:8080/api";
+const token = localStorage.getItem("token");
+
+/* LOAD BOOKINGS */
+function loadBookings() {
+  fetch(`${API}/bookings/mechanic`, {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    const table = document.getElementById("bookingTable");
+
+    if (!data || data.length === 0) {
+      table.innerHTML = `<tr><td colspan="7" class="empty">No bookings yet</td></tr>`;
+      return;
+    }
+
+    table.innerHTML = "";
+
+    data.forEach(b => {
+      table.innerHTML += `
+        <tr>
+          <td>${b.service?.serviceName || "-"}</td>
+          <td>${b.customerName}</td>
+          <td>${b.customerEmail}</td>
+          <td>${b.customerPhone}</td>
+          <td>${b.address}</td>
+          <td>${b.timeSlot}</td>
+
+          <td>
+            <span class="badge ${b.status}">
+              ${b.status}
+            </span>
+          </td>
+
+          <td>
+            ${b.status !== "CONFIRMED"
+              ? `<button class="btn" onclick="confirmBooking(${b.id})">Confirm</button>`
+              : `✔`}
+          </td>
+        </tr>
+      `;
+    });
+  });
+}
+
+/* CONFIRM BOOKING */
+function confirmBooking(id) {
+  fetch(`${API}/bookings/${id}?status=CONFIRMED`, {
+    method: "PUT"
+  })
+  .then(() => loadBookings());
+}
+
+/* LOGOUT */
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+}
+
+/* INIT */
+loadBookings();
+setInterval(loadBookings, 3000);
+
+function loadProfile() {
+  fetch(`${API}/mechanics/profile`, {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    // You can choose what to show:
+    // ownerName OR garageName
+
+    const name = data.ownerName || data.garageName || "Mechanic";
+
+    document.getElementById("welcomeText").innerText =
+      `Hello, ${name} 👋`;
+  })
+  .catch(() => {
+    document.getElementById("welcomeText").innerText =
+      "Hello 👋";
+  });
+}
+
+loadProfile();
+</script>
+
+</body>
+</html>

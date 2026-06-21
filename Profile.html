@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - AutoSarthi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="autosarthi.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .profile-layout { max-width: 900px; margin: 40px auto; padding: 0 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+    
+    /* SIDEBAR CARD */
+    .profile-sidebar { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+    .profile-avatar-section { background: var(--forest); padding: 32px 24px; text-align: center; }
+    .avatar-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(94,255,198,0.2); border: 2px solid rgba(94,255,198,0.4);
+      display: grid; place-items: center; margin: 0 auto 14px;
+      font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--mint);
+    }
+    .profile-garage-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: white; }
+    .profile-owner { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .profile-nav { padding: 12px 0; }
+    .profile-nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 20px; font-size: 14px; font-weight: 500;
+      color: var(--text-secondary); text-decoration: none;
+      transition: var(--transition); border-left: 3px solid transparent;
+    }
+    .profile-nav a:hover, .profile-nav a.active { color: var(--forest); background: var(--surface); border-left-color: var(--forest); }
+    .profile-nav a i { width: 16px; text-align: center; color: var(--text-muted); }
+    .profile-nav a:hover i, .profile-nav a.active i { color: var(--forest); }
+    .profile-nav .divider { height: 1px; background: var(--border); margin: 8px 16px; }
+    .logout-link { color: var(--danger) !important; }
+    .logout-link i { color: var(--danger) !important; }
+
+    /* MAIN */
+    .profile-main { display: flex; flex-direction: column; gap: 20px; }
+    .section-card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+    .section-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .section-card-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+    .section-card-title i { color: var(--forest-light); }
+    .section-card-body { padding: 24px; }
+
+    .info-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-size: 13px; color: var(--text-muted); width: 120px; flex-shrink: 0; }
+    .info-value { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+
+    .service-chip { background: var(--surface-2); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+    .service-chip:last-child { margin-bottom: 0; }
+    .chip-info { flex: 1; }
+    .chip-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .chip-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .chip-price { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--forest); }
+
+    @media(max-width: 768px) {
+      .profile-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body style="background:var(--surface);">
+
+<nav class="navbar">
+  <a href="home.html" class="logo"><i class="fa-solid fa-car-side"></i> AutoSarthi</a>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="car-wash.html">Car Wash</a>
+    <a href="auto-services.html">Auto Services</a>
+  </div>
+  <div class="nav-right">
+    <div class="profile-container">
+      <i class="fa-solid fa-user-circle profile-icon" onclick="toggleProfileMenu()"></i>
+      <div class="profile-menu" id="profileMenuNav">
+        <a href="profile.html">My Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="profile-layout">
+
+  <div class="profile-sidebar">
+    <div class="profile-avatar-section">
+      <div class="avatar-circle" id="avatarInitial">?</div>
+      <div class="profile-garage-name" id="sideGarage">Loading...</div>
+      <div class="profile-owner" id="sideOwner"></div>
+    </div>
+    <nav class="profile-nav">
+      <a href="profile.html" class="active"><i class="fa-solid fa-user"></i> My Profile</a>
+      <a href="manage-services.html"><i class="fa-solid fa-list-check"></i> Manage Services</a>
+      <a href="mechanic-admin-panel.html"><i class="fa-solid fa-clipboard-list"></i> Booking Requests</a>
+      <a href="edit-profile.html"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+      <div class="divider"></div>
+      <a href="#" class="logout-link" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </nav>
+  </div>
+
+  <div class="profile-main">
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title"><i class="fa-solid fa-id-card"></i> Garage Information</div>
+        <a href="edit-profile.html" class="btn btn-secondary" style="padding:7px 14px;font-size:13px;">
+          <i class="fa-solid fa-pen-to-square"></i> Edit
+        </a>
+      </div>
+      <div class="section-card-body" id="profileInfo">
+        <div style="color:var(--text-muted);font-size:14px;">Loading profile...</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title"><i class="fa-solid fa-list-check"></i> My Services</div>
+        <a href="manage-services.html" class="btn btn-primary" style="padding:7px 14px;font-size:13px;">
+          <i class="fa-solid fa-plus"></i> Add Service
+        </a>
+      </div>
+      <div class="section-card-body" id="servicesContainer">
+        <div style="color:var(--text-muted);font-size:14px;">Loading services...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "login.html";
+
+fetch("http://localhost:8080/api/mechanics/profile", {
+  headers: { "Authorization": "Bearer " + token }
+})
+.then(r => r.json())
+.then(data => {
+  const initials = (data.garageName || "?").charAt(0).toUpperCase();
+  document.getElementById("avatarInitial").textContent = initials;
+  document.getElementById("sideGarage").textContent = data.garageName;
+  document.getElementById("sideOwner").textContent = data.ownerName;
+  document.getElementById("profileInfo").innerHTML = `
+    <div class="info-row"><span class="info-label">Garage</span><span class="info-value">${data.garageName}</span></div>
+    <div class="info-row"><span class="info-label">Owner</span><span class="info-value">${data.ownerName}</span></div>
+    <div class="info-row"><span class="info-label">Email</span><span class="info-value">${data.email}</span></div>
+    <div class="info-row"><span class="info-label">Phone</span><span class="info-value">${data.phone}</span></div>
+    <div class="info-row"><span class="info-label">City</span><span class="info-value">${data.city}</span></div>`;
+});
+
+fetch("http://localhost:8080/api/services/my-services", {
+  headers: { "Authorization": "Bearer " + token }
+})
+.then(r => { if (!r.ok) throw new Error(); return r.json(); })
+.then(data => {
+  const c = document.getElementById("servicesContainer");
+  if (!data.length) {
+    c.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:14px;">No services listed yet. <a href="manage-services.html" style="color:var(--forest);font-weight:600;">Add your first service</a>.</div>`;
+    return;
+  }
+  c.innerHTML = data.map(s => `
+    <div class="service-chip">
+      <div class="chip-info">
+        <div class="chip-name">${s.serviceName}</div>
+        <div class="chip-desc">${s.description}</div>
+      </div>
+      <div class="chip-price">₹${s.price}</div>
+    </div>`).join('');
+})
+.catch(() => {
+  document.getElementById("servicesContainer").innerHTML = `<div style="color:var(--text-muted);font-size:14px;">Could not load services.</div>`;
+});
+
+function logout() { localStorage.removeItem("token"); window.location.href = "home.html"; }
+function toggleProfileMenu() { document.getElementById("profileMenuNav").classList.toggle("show"); }
+</script>
+</body>
+</html>

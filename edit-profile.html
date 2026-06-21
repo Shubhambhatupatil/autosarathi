@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile - AutoSarthi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="autosarthi.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 14px; font-weight: 500; margin-bottom: 24px;
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--forest); }
+    .edit-card {
+      background: white; border-radius: var(--radius-lg);
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .edit-card-header {
+      background: var(--forest); padding: 24px 28px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .edit-card-header i { font-size: 28px; color: var(--mint); }
+    .edit-card-header-text h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: white; }
+    .edit-card-header-text p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+    .edit-card-body { padding: 28px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-actions { display: flex; gap: 10px; padding-top: 8px; }
+
+    .input-group { position: relative; }
+    .input-group .input-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    .input-group .form-control { padding-left: 38px; }
+
+    @media(max-width: 560px) { .form-row { grid-template-columns: 1fr; } .form-actions { flex-direction: column; } }
+  </style>
+</head>
+<body style="background:var(--surface);">
+
+<nav class="navbar">
+  <a href="home.html" class="logo"><i class="fa-solid fa-car-side"></i> AutoSarthi</a>
+  <div class="nav-right">
+    <div class="profile-container">
+      <i class="fa-solid fa-user-circle profile-icon" onclick="document.getElementById('profileMenuNav').classList.toggle('show')"></i>
+      <div class="profile-menu" id="profileMenuNav">
+        <a href="profile.html">My Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+  <a href="profile.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Profile</a>
+
+  <div class="edit-card">
+    <div class="edit-card-header">
+      <i class="fa-solid fa-pen-to-square"></i>
+      <div class="edit-card-header-text">
+        <h2>Edit Profile</h2>
+        <p>Update your garage information below</p>
+      </div>
+    </div>
+    <div class="edit-card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Garage Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-warehouse input-icon"></i>
+            <input type="text" id="garageName" class="form-control" placeholder="Garage Name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Owner Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" id="ownerName" class="form-control" placeholder="Owner Name">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address <span style="font-size:11px;color:var(--text-muted);">(cannot be changed)</span></label>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope input-icon"></i>
+          <input type="email" id="email" class="form-control" disabled>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <div class="input-group">
+            <i class="fa-solid fa-phone input-icon"></i>
+            <input type="text" id="phone" class="form-control" placeholder="Phone">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <div class="input-group">
+            <i class="fa-solid fa-city input-icon"></i>
+            <input type="text" id="city" class="form-control" placeholder="City">
+          </div>
+        </div>
+      </div>
+
+      <div id="message"></div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="goBack()">Cancel</button>
+        <button class="btn btn-primary" onclick="updateProfile()">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "login.html";
+
+fetch("http://localhost:8080/api/mechanics/profile", {
+  headers: { "Authorization": "Bearer " + token }
+})
+.then(r => r.json())
+.then(data => {
+  document.getElementById("garageName").value = data.garageName;
+  document.getElementById("ownerName").value = data.ownerName;
+  document.getElementById("email").value = data.email;
+  document.getElementById("phone").value = data.phone;
+  document.getElementById("city").value = data.city;
+});
+
+function updateProfile() {
+  const btn = document.querySelector('.btn-primary');
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+  btn.disabled = true;
+
+  const updatedData = {
+    garageName: document.getElementById("garageName").value,
+    ownerName: document.getElementById("ownerName").value,
+    phone: document.getElementById("phone").value,
+    city: document.getElementById("city").value
+  };
+
+  fetch("http://localhost:8080/api/mechanics/update", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+    body: JSON.stringify(updatedData)
+  })
+  .then(r => r.json())
+  .then(() => {
+    document.getElementById("message").innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Profile updated successfully!</div>`;
+    setTimeout(() => window.location.href = "Profile.html", 1200);
+  })
+  .catch(() => {
+    document.getElementById("message").innerHTML = `<div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> Failed to update profile.</div>`;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+    btn.disabled = false;
+  });
+}
+
+function goBack() { window.location.href = "Profile.html"; }
+function logout() { localStorage.removeItem("token"); window.location.href = "home.html"; }
+</script>
+</body>
+</html>
