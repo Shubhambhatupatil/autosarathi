@@ -100,7 +100,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     password: document.getElementById("password").value
   };
 
-  fetch("http://localhost:8080/api/mechanics/login", {
+  fetch("https://autosarathi-api.onrender.com/api/mechanics/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(loginData)

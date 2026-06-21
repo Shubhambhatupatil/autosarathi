@@ -221,7 +221,7 @@
             return;
         }
 
-        fetch(`http://localhost:8080/api/bookings/track/${token}`)
+        fetch(`https://autosarathi-api.onrender.com/api/bookings/track/${token}`)
             .then(response => {
                 if (!response.ok) throw new Error("Not found");
                 return response.json();

@@ -383,7 +383,7 @@ let currentBookingId = null;
 const token = localStorage.getItem("token");
 const navRight = document.getElementById("navRight");
 if (token) {
-  fetch("http://localhost:8080/api/mechanics/profile", { headers: { "Authorization": "Bearer " + token } })
+  fetch("https://autosarathi-api.onrender.com/api/mechanics/profile", { headers: { "Authorization": "Bearer " + token } })
     .then(r => r.json())
     .then(data => {
       navRight.innerHTML = `
@@ -545,7 +545,7 @@ function confirmBooking() {
     status: "PENDING"
   };
 
-  fetch(`http://localhost:8080/api/bookings/${selectedServiceId}`, {
+  fetch(`https://autosarathi-api.onrender.com/api/bookings/${selectedServiceId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bookingData)
@@ -577,7 +577,7 @@ function closeSuccessModal() {
 }
 
 // ── FETCH SERVICES ──
-fetch("http://localhost:8080/api/public/auto-services")
+fetch("https://autosarathi-api.onrender.com/api/public/auto-services")
   .then(r => { if (!r.ok) throw new Error(); return r.json(); })
   .then(data => {
     allServices = Array.isArray(data) ? data : [];

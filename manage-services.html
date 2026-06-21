@@ -146,7 +146,7 @@ function selectType(type) {
 window.onload = loadServices;
 
 function loadServices() {
-  fetch("http://localhost:8080/api/services/my-services", {
+  fetch("https://autosarathi-api.onrender.com/api/services/my-services", {
     headers: { "Authorization": "Bearer " + token }
   })
   .then(r => r.json())
@@ -201,7 +201,7 @@ function addService() {
     serviceType: document.getElementById("serviceType").value
   };
 
-  fetch("http://localhost:8080/api/services/add", {
+  fetch("https://autosarathi-api.onrender.com/api/services/add", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
     body: JSON.stringify(serviceData)

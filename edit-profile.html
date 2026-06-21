@@ -121,7 +121,7 @@
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "login.html";
 
-fetch("http://localhost:8080/api/mechanics/profile", {
+fetch("https://autosarathi-api.onrender.com/api/mechanics/profile", {
   headers: { "Authorization": "Bearer " + token }
 })
 .then(r => r.json())
@@ -145,7 +145,7 @@ function updateProfile() {
     city: document.getElementById("city").value
   };
 
-  fetch("http://localhost:8080/api/mechanics/update", {
+  fetch("https://autosarathi-api.onrender.com/api/mechanics/update", {
     method: "PUT",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
     body: JSON.stringify(updatedData)

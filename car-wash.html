@@ -91,7 +91,7 @@ function displayServices(data) {
   });
 }
 
-fetch("http://localhost:8080/api/public/car-wash-services")
+fetch("https://autosarathi-api.onrender.com/api/public/car-wash-services")
   .then(res => res.json())
   .then(data => { allServices = data; displayServices(allServices); })
   .catch(() => {

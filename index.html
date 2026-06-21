@@ -271,7 +271,7 @@ const navRight = document.getElementById("navRight");
 const sidebar = document.getElementById("sidebar");
 
 if (token) {
-  fetch("http://localhost:8080/api/mechanics/profile", {
+  fetch("https://autosarathi-api.onrender.com/api/mechanics/profile", {
     headers: { "Authorization": "Bearer " + token }
   })
   .then(data => {
